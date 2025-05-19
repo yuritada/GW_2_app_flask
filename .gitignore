@@ -1,0 +1,56 @@
+# バックエンド関連
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+.venv/
+venv/
+ENV/
+.env
+.env.*
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+*.sqlite
+*.db
+backend/__pycache__/
+backend/.venv/
+
+# フロントエンド関連
+frontend/node_modules/
+frontend/.pnp
+frontend/.pnp.js
+frontend/build/
+frontend/dist/
+frontend/.next/
+frontend/out/
+frontend/coverage/
+frontend/.env*
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# OS固有のファイル
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# エディタ設定
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ログと一時ファイル
+*.log
+logs/
+tmp/
+temp/
