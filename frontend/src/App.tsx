@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import './App.css';
 
 function App() {
-  const [inputFeatures, setInputFeatures] = useState<string>('');
-  const [prediction, setPrediction] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
+  const [inputFeatures, setInputFeatures] = useState<string>(''); // 入力文字列
+  const [prediction, setPrediction] = useState<any>(null); // 予測結果
+  const [loading, setLoading] = useState<boolean>(false); // ローディング状態
+  const [error, setError] = useState<string | null>(null); // エラーメッセージ
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

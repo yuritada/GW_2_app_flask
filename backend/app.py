@@ -5,13 +5,14 @@ from pydantic import BaseModel
 import pickle
 import numpy as np
 import uvicorn
+import joblib
 
 app = FastAPI()
 
 # CORSを有効化（Reactアプリからのリクエストを許可）
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Reactアプリのオリジン
+    allow_origins=["http://localhost:3002"],  # Reactアプリのオリジン
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -19,12 +20,14 @@ app.add_middleware(
 
 # 学習済みモデルの読み込み
 try:
-    with open('foul_prediction_model.pkl', 'rb') as f:
-        model = pickle.load(f)
-    print("モデルを正常に読み込みました")
+    import joblib
+    model = joblib.load('foul_prediction_model.pkl')
+    label_encoders = joblib.load('label_encoders.pkl')
+    print("モデルとラベルエンコーダーを正常に読み込みました")
 except Exception as e:
     print(f"モデル読み込みエラー: {e}")
     model = None
+    label_encoders = None
 
 # リクエストのデータ型定義
 class PredictionRequest(BaseModel):
