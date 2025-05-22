@@ -77,6 +77,7 @@ import joblib
 from typing import Optional
 from math import sqrt
 from datetime import datetime
+import pandas as pd
 
 app = FastAPI()
 
@@ -89,7 +90,7 @@ app.add_middleware(
 
     allow_origins=["*"],  # すべてのオリジンを許可（開発環境用）
 
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # OPTIONメソッドを明示的に許可S
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],  # OPTIONメソッドを明示的に許可
 
     expose_headers=["*"],
     max_age=86400,  # OPTIONSリクエストのキャッシュ時間（秒）
@@ -204,10 +205,6 @@ def predict_foul(model, label_encoders, sample_input):
     Returns:
         float: ファウルの可能性
     """
-    import pandas as pd
-    import numpy as np
-    from math import sqrt
-    
     # 必要な特徴量リスト（モデルがトレーニングされた順序と同じ）
     features = [
         # 投球の基本情報
@@ -375,14 +372,50 @@ def predict_foul(model, label_encoders, sample_input):
     feature_dict['is_home_team_batting'] = 1 if feature_dict['top_bottom'] == 1 else 0
     
     # 7. 時間的特徴（現在の日付から取得または指定された値を使用）
+    # current_date = datetime.now()
+    # feature_dict['day_of_week'] = sample_input.get('day_of_week', current_date.weekday())
+    # feature_dict['month'] = sample_input.get('month', current_date.month)
+    # if feature_dict['day_of_week'] is None:
+    #     feature_dict['is_weekend'] = 0  # Noneの場合のデフォルト値
+    # else:
+    #     feature_dict['is_weekend'] = 1 if feature_dict['day_of_week'] >= 5 else 0
+
+        # 特徴量辞書の初期化
+    # feature_dict = {}
+    
+    # 日付関連の特徴量
     current_date = datetime.now()
-    feature_dict['day_of_week'] = sample_input.get('day_of_week', current_date.weekday())
-    feature_dict['month'] = sample_input.get('month', current_date.month)
-    feature_dict['is_weekend'] = 1 if feature_dict['day_of_week'] >= 5 else 0
+    
+    # 文字列から数値への明示的な変換
+    day_of_week = sample_input.get('day_of_week')
+    if day_of_week is not None:
+        try:
+            day_of_week = int(day_of_week)
+        except (ValueError, TypeError):
+            day_of_week = current_date.weekday()
+    else:
+        day_of_week = current_date.weekday()
+    
+    month = sample_input.get('month')
+    if month is not None:
+        try:
+            month = int(month)
+        except (ValueError, TypeError):
+            month = current_date.month
+    else:
+        month = current_date.month
+    
+    # 数値型として格納
+    feature_dict['day_of_week'] = day_of_week
+    feature_dict['month'] = month
+    
+    # 週末判定
+    feature_dict['is_weekend'] = 1 if day_of_week >= 5 else 0
     
     # 特徴量辞書からデータフレームを作成
     input_df = pd.DataFrame([feature_dict])
     
+
     # 特徴量の順序を確認
     for feature in features:
         if feature not in input_df.columns:
@@ -397,7 +430,7 @@ def predict_foul(model, label_encoders, sample_input):
     
     # ファウルの可能性を予測
     foul_probability = model.predict_proba(input_df)[0, 1]
-    
+    print(f"ファウル確率: {foul_probability}")
     return foul_probability
 
 # API情報
