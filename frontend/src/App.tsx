@@ -199,13 +199,38 @@ function App() {
   );
 
   // ラジオボタンのレンダリング
+  // const renderRadioGroup = (
+  //   label: string,
+  //   name: keyof typeof inputData,
+  //   options: { value: number; label: string }[]
+  // ) => (
+  //   <div className="form-group">
+  //     <label>{label}:</label>
+  //     <div className="radio-group">
+  //       {options.map(option => (
+  //         <label key={option.value}>
+  //           <input
+  //             type="radio"
+  //             name={name}
+  //             value={option.value}
+  //             checked={inputData[name] === option.value}
+  //             onChange={handleChange}
+  //           />
+  //           {option.label}
+  //         </label>
+  //       ))}
+  //     </div>
+  //   </div>
+  // );
+
+
   const renderRadioGroup = (
     label: string,
     name: keyof typeof inputData,
     options: { value: number; label: string }[]
   ) => (
     <div className="form-group">
-      <label>{label}:</label>
+      <div className="field-label">{label}:</div> 
       <div className="radio-group">
         {options.map(option => (
           <label key={option.value}>
@@ -216,7 +241,7 @@ function App() {
               checked={inputData[name] === option.value}
               onChange={handleChange}
             />
-            {option.label}
+            <span>{option.label}</span>
           </label>
         ))}
       </div>
@@ -250,8 +275,8 @@ function App() {
             </div>
             
             {renderNumberInput('球速 (km/h)', 'velocity', 100, 170)}
-            {renderNumberInput('横座標 (m)', 'coordinate_x', -1, 1, 0.01)}
-            {renderNumberInput('縦座標 (m)', 'coordinate_y', -1, 1, 0.01)}
+            {renderNumberInput('横座標', 'coordinate_x', -1, 1, 0.01)}
+            {renderNumberInput('縦座標', 'coordinate_y', -1, 1, 0.01)}
           </div>
 
           <div className="form-section">
@@ -323,11 +348,11 @@ function App() {
               <div className="probability-bar">
                 <div 
                   className="probability-fill" 
-                  style={{ width: `${(prediction.foul_probability * 100).toFixed(2)}%` }}
+                  style={{ width: `${(prediction.foul_probability * 100000).toFixed(2)}%` }}
                 ></div>
               </div>
               <p className="probability-value">
-                ファウル確率: {(prediction.foul_probability * 100).toFixed(2)}%
+                ファウル確率: {(prediction.foul_probability * 10000).toFixed(5)}%
               </p>
             </div>
           </div>
