@@ -107,6 +107,7 @@
 
 .radio-group {
   display: flex;
+  white-space: nowrap;
   gap: 150px;
 }
 
